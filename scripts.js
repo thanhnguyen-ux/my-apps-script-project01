@@ -66,7 +66,7 @@ function handleOrderSubmit(e) {
   btn.disabled = true;
   btn.textContent = "Đang xử lý...";
 
-fetch("/api/order", {
+fetch("/api/orders", {
   method: "POST",
   body: JSON.stringify(orderDetails),
   headers: { "Content-Type": "application/json" }
