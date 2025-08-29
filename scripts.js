@@ -77,7 +77,7 @@ fetch("/api/orders", {
       showPopup("Thành công!", response.message);
       cart = [];
       updateCartUI();
-      document.getElementById("order-form").reset();
+      document.getElementById("Orders").reset();
     } else {
       showPopup("Thất bại!", response.message, false);
     }
