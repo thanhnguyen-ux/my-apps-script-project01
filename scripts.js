@@ -66,29 +66,30 @@ function handleOrderSubmit(e) {
   btn.disabled = true;
   btn.textContent = "Đang xử lý...";
 
-  fetch("https://script.google.com/macros/s/AKfycbx-y-H1jLsEjSjyDFIXAQCz_GsKgVsCywo6zqt3lcT0PEL4R5Yj8hFY9xQdC3bwA2ea/exec?action=placeOrder", {
-    method: "POST",
-    body: JSON.stringify(orderDetails),
-    headers: { "Content-Type": "application/json" }
+ fetch("/api/order", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(orderDetails),
+})
+  .then((res) => res.json())
+  .then((response) => {
+    if (response.success) {
+      showPopup("Thành công!", response.message);
+      cart = [];
+      updateCartUI();
+      document.getElementById("order-form").reset();
+    } else {
+      showPopup("Thất bại!", response.message, false);
+    }
+    btn.disabled = false;
+    btn.textContent = "Xác Nhận Đặt Hàng";
   })
-    .then(res => res.json())
-    .then(response => {
-      if (response.success) {
-        showPopup("Thành công!", response.message);
-        cart = [];
-        updateCartUI();
-        document.getElementById("order-form").reset();
-      } else {
-        showPopup("Thất bại!", response.message, false);
-      }
-      btn.disabled = false;
-      btn.textContent = "Xác Nhận Đặt Hàng";
-    })
-    .catch(err => {
-      showPopup("Lỗi nghiêm trọng!", "Không thể kết nối máy chủ. " + err.message, false);
-      btn.disabled = false;
-      btn.textContent = "Xác Nhận Đặt Hàng";
-    });
+  .catch((err) => {
+    showPopup("Lỗi nghiêm trọng!", "Không thể kết nối máy chủ. " + err.message, false);
+    btn.disabled = false;
+    btn.textContent = "Xác Nhận Đặt Hàng";
+  });
+
 }
 
 
