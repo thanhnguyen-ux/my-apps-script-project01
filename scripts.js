@@ -66,7 +66,7 @@ function handleOrderSubmit(e) {
   btn.disabled = true;
   btn.textContent = "Đang xử lý...";
 
-  fetch("https://script.google.com/macros/s/AKfycbwkBJW-EYk1UJhc197nkuOVRkCkAztGCPUPVtkO50-YwqWfdNjnPLKuKdl7Pf0qNh41/exec?action=placeOrder", {
+  fetch("https://script.google.com/macros/s/AKfycbw75LmtzLPNcVWLfsqg5HTc3ZH5Y6JJh3_7LMgu2MMH36eCvgX_OQVmDnC-A9zGGBeH/exec?action=placeOrder", {
     method: "POST",
     body: JSON.stringify(orderDetails),
     headers: { "Content-Type": "application/json" }
@@ -97,7 +97,7 @@ function loadProducts() {
   const productGrid = document.getElementById('product-grid');
   productGrid.innerHTML = '<p>Đang tải sản phẩm...</p>';
 
-  fetch("https://script.google.com/macros/s/AKfycbwkBJW-EYk1UJhc197nkuOVRkCkAztGCPUPVtkO50-YwqWfdNjnPLKuKdl7Pf0qNh41/exec?action=getProducts")
+  fetch("https://script.google.com/macros/s/AKfycbw75LmtzLPNcVWLfsqg5HTc3ZH5Y6JJh3_7LMgu2MMH36eCvgX_OQVmDnC-A9zGGBeH/exec?action=getProducts")
     .then(res => res.json())
     .then(data => {
       renderProducts(data);
