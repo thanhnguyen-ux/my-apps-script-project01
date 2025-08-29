@@ -1,34 +1,25 @@
-fetch("/api/order", {
-  method: "POST",
-  body: JSON.stringify(orderDetails),
-  headers: { "Content-Type": "application/json" }
-})
-  .then(async res => {
-    const text = await res.text();  // lấy raw text
-    console.log("🔍 Raw response từ proxy:", text);
+export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ success: false, message: "Method not allowed" });
+  }
 
+  try {
+    const response = await fetch("https://script.google.com/macros/s/AKfycbx-y-H1jLsEjSjyDFIXAQCz_GsKgVsCywo6zqt3lcT0PEL4R5Yj8hFY9xQdC3bwA2ea/exec?action=placeOrder", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(req.body),
+    });
+
+    const text = await response.text();  // lấy raw text để debug
+    let data;
     try {
-      const data = JSON.parse(text);  // thử parse
-      return data;
-    } catch (err) {
-      throw new Error("Không parse được JSON. Raw = " + text);
+      data = JSON.parse(text);
+    } catch {
+      return res.status(500).json({ success: false, message: "Không parse được JSON", raw: text });
     }
-  })
-  .then(response => {
-    if (response.success) {
-      showPopup("Thành công!", response.message);
-      cart = [];
-      updateCartUI();
-      document.getElementById("order-form").reset();
-    } else {
-      showPopup("Thất bại!", response.message, false);
-    }
-    btn.disabled = false;
-    btn.textContent = "Xác Nhận Đặt Hàng";
-  })
-  .catch(err => {
-    console.error("❌ Lỗi:", err);
-    showPopup("Lỗi nghiêm trọng!", err.message, false);
-    btn.disabled = false;
-    btn.textContent = "Xác Nhận Đặt Hàng";
-  });
+
+    return res.status(200).json(data);
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+}
