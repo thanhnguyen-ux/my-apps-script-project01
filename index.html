@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:700,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header id="main-header">
+        <div class="container">
+            <h1 class="logo">Thành IT</h1>
+            <nav class="main-nav" id="main-nav">
+                <a href="#hero">Trang Chủ</a>
+                <a href="#products">Sản Phẩm</a>
+                <a href="#cart-section">Giỏ Hàng</a>
+            </nav>
+            <button class="hamburger-menu" id="hamburger-menu">
+                <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero">
+            <div class="hero-content">
+                <h2>Công Nghệ Trong Tầm Tay</h2>
+                <p>Giải pháp tối ưu cho công việc và giải trí của bạn.</p>
+                <a href="#products" class="cta-button">Khám Phá Ngay</a>
+            </div>
+        </section>
+
+        <section id="products" class="container section">
+            <h2 class="section-title">Danh Mục Sản Phẩm</h2>
+            <div id="product-grid" class="product-grid">
+                </div>
+        </section>
+
+        <section id="cart-section" class="section">
+            <div class="container">
+                <h2 class="section-title">Giỏ Hàng & Thanh Toán</h2>
+                <div class="cart-container">
+                    <div class="cart-items-wrapper">
+                        <h3>Các món đã chọn</h3>
+                        <div id="cart-items">
+                            <p>Giỏ hàng của bạn đang trống.</p>
+                        </div>
+                         <div class="total-price">
+                            <strong>Tổng cộng:</strong> <span id="total-price">0đ</span>
+                        </div>
+                    </div>
+                    <div class="customer-info-wrapper">
+                         <h3>Thông tin đặt hàng</h3>
+                         <form id="order-form">
+                            <input type="text" id="customer-name" placeholder="Họ và Tên" required>
+                            <input type="tel" id="customer-phone" placeholder="Số điện thoại" required>
+                            <textarea id="customer-address" placeholder="Địa chỉ nhận hàng" required></textarea>
+                            <button type="submit" class="checkout-button">Xác Nhận Đặt Hàng</button>
+                         </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="main-footer">
+        <p>&copy; 2025 Thành IT. All Rights Reserved.</p>
+    </footer>
+
+    <div class="popup-overlay" id="popup-overlay"></div>
+    <div class="popup" id="popup">
+        <button class="close-popup" id="close-popup">×</button>
+        <div class="popup-icon" id="popup-icon">✔️</div>
+        <h3 id="popup-title">Thành công!</h3>
+        <p id="popup-message">Đơn hàng của bạn đã được ghi nhận.</p>
+    </div>
+
+    <!-- JS -->
+    <script src="scripts.js"></script>
+</body>
+</html>
