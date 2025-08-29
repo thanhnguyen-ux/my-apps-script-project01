@@ -1,30 +1,34 @@
-export default async function handler(req, res) {
-  if (req.method === "POST") {
+fetch("/api/order", {
+  method: "POST",
+  body: JSON.stringify(orderDetails),
+  headers: { "Content-Type": "application/json" }
+})
+  .then(async res => {
+    const text = await res.text();  // lấy raw text
+    console.log("🔍 Raw response từ proxy:", text);
+
     try {
-      const orderDetails = req.body; // body JSON từ frontend
-
-      const response = await fetch(
-        "https://script.google.com/macros/s/AKfycbxGNGtt04zpIrOahbkCQwj3p6U_9dQmrVernFf0SSZcdoQvquSOLbhHBAMQHKu0Vk26/exec?action=placeOrder",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(orderDetails), // gửi JSON
-        }
-      );
-
-      // ⚡ kiểm tra nếu response không phải JSON
-      const text = await response.text();
-      try {
-        const data = JSON.parse(text);
-        res.status(200).json(data);
-      } catch {
-        res.status(500).json({ success: false, message: "Apps Script không trả JSON: " + text });
-      }
+      const data = JSON.parse(text);  // thử parse
+      return data;
     } catch (err) {
-      res.status(500).json({ success: false, message: "Server error: " + err.message });
+      throw new Error("Không parse được JSON. Raw = " + text);
     }
-  } else {
-    res.setHeader("Allow", ["POST"]);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
-  }
-}
+  })
+  .then(response => {
+    if (response.success) {
+      showPopup("Thành công!", response.message);
+      cart = [];
+      updateCartUI();
+      document.getElementById("order-form").reset();
+    } else {
+      showPopup("Thất bại!", response.message, false);
+    }
+    btn.disabled = false;
+    btn.textContent = "Xác Nhận Đặt Hàng";
+  })
+  .catch(err => {
+    console.error("❌ Lỗi:", err);
+    showPopup("Lỗi nghiêm trọng!", err.message, false);
+    btn.disabled = false;
+    btn.textContent = "Xác Nhận Đặt Hàng";
+  });
