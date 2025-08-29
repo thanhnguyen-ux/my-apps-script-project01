@@ -66,13 +66,13 @@ function handleOrderSubmit(e) {
   btn.disabled = true;
   btn.textContent = "Đang xử lý...";
 
- fetch("/api/order", {
+fetch("/api/order", {
   method: "POST",
-  headers: { "Content-Type": "application/json" },
   body: JSON.stringify(orderDetails),
+  headers: { "Content-Type": "application/json" }
 })
-  .then((res) => res.json())
-  .then((response) => {
+  .then(res => res.json())
+  .then(response => {
     if (response.success) {
       showPopup("Thành công!", response.message);
       cart = [];
@@ -84,11 +84,12 @@ function handleOrderSubmit(e) {
     btn.disabled = false;
     btn.textContent = "Xác Nhận Đặt Hàng";
   })
-  .catch((err) => {
+  .catch(err => {
     showPopup("Lỗi nghiêm trọng!", "Không thể kết nối máy chủ. " + err.message, false);
     btn.disabled = false;
     btn.textContent = "Xác Nhận Đặt Hàng";
   });
+
 
 }
 
