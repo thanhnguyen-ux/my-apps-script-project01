@@ -51,12 +51,61 @@
     document.getElementById('popup-overlay').classList.remove('active');
   }
 
-  function handleOrderSubmit(e) {
-    e.preventDefault(); // Ngăn form tải lại trang
-    if (cart.length === 0) {
-        showPopup('Lỗi!', 'Giỏ hàng của bạn đang trống.', false);
-        return;
+// ...
+async function handleOrderSubmit(e) {
+  e.preventDefault();
+  
+  if (cart.length === 0) {
+    showPopup('Lỗi!', 'Giỏ hàng của bạn đang trống.', false);
+    return;
+  }
+  
+  const customerData = {
+    name: document.getElementById('customer-name').value,
+    phone: document.getElementById('customer-phone').value,
+    address: document.getElementById('customer-address').value,
+  };
+
+  if (!customerData.name || !customerData.phone || !customerData.address) {
+    showPopup('Lỗi!', 'Vui lòng điền đầy đủ thông tin đặt hàng.', false);
+    return;
+  }
+  
+  const orderDetails = {
+    customer: customerData,
+    cart: cart
+  };
+  
+  const btn = e.target.querySelector('button');
+  btn.disabled = true;
+  btn.textContent = 'Đang xử lý...';
+  
+  try {
+    const response = await fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderDetails })
+    });
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      showPopup('Thành công!', result.message);
+      cart = [];
+      updateCartUI();
+      document.getElementById('order-form').reset();
+    } else {
+      showPopup('Thất bại!', result.message, false);
     }
+  } catch (error) {
+    console.error('Lỗi khi gửi đơn hàng:', error);
+    showPopup('Lỗi nghiêm trọng!', 'Không thể kết nối đến máy chủ. Vui lòng thử lại.', false);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Xác Nhận Đặt Hàng';
+  }
+}
+// ...
     
     const customerData = {
         name: document.getElementById('customer-name').value,
@@ -100,16 +149,30 @@
             btn.textContent = 'Xác Nhận Đặt Hàng';
         })
         .placeOrder(orderDetails);
-  }
   
-  function loadProducts() {
-    const productGrid = document.getElementById('product-grid');
-    productGrid.innerHTML = '<p>Đang tải sản phẩm...</p>';
-    google.script.run
-      .withSuccessHandler(renderProducts)
-      .withFailureHandler(error => console.error('Lỗi getProducts:', error))
-      .getProducts();
-  }
+  
+// ...
+function loadProducts() {
+  const productGrid = document.getElementById('product-grid');
+  productGrid.innerHTML = '<p>Đang tải sản phẩm...</p>';
+
+  // Thay thế google.script.run bằng fetch
+  fetch('/api/products')
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === 'success') {
+        renderProducts(data.data); // data.data là danh sách sản phẩm
+      } else {
+        console.error('Lỗi khi lấy sản phẩm:', data.message);
+        productGrid.innerHTML = '<p>Lỗi khi tải dữ liệu sản phẩm.</p>';
+      }
+    })
+    .catch(error => {
+      console.error('Lỗi mạng:', error);
+      productGrid.innerHTML = '<p>Lỗi kết nối đến máy chủ.</p>';
+    });
+}
+// ...
 
   function renderProducts(products) {
     const productGrid = document.getElementById('product-grid');
